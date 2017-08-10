@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "taarExperiment",
+  "definitions": {
+    "attributes": {
+      "properties": {
+        "initialized": {"type": "boolean"},
+        "starttime": {"type": "value"},
+        "sawPopup": {"type": "boolean"},
+        "webNav": {"type": "value"},
+        "clickedButton": {"type": "boolean"}}
+      },
+      "additionalProperties": false,
+      "minProperties": 5
+    }
+}

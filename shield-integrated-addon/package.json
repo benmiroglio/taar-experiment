@@ -1,0 +1,43 @@
+{
+  "name": "shield-studies-addon-utils",
+  "version": "4.0.0",
+  "description": "Utilities for building  Shield-Study Mozilla Firefox addons.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "npm-run-all test:*",
+    "test:func": "export FIREFOX_BINARY=${FIREFOX_BINARY:-beta} && npm run build && XPI_NAME=dist/example_webextension-0.0.1.zip mocha test/functional/",
+    "predist": "npm run eslint",
+    "dist": "webpack",
+    "eslint": "eslint src --ext jsm --ext js --ext json"
+  },
+  "author": "Gregg Lind <glind@mozilla.com>",
+  "license": "MPL-2.0",
+  "dependencies": {},
+  "devDependencies": {
+    "ajv": "^4.11.2",
+    "eslint": "^4.0.0",
+    "eslint-plugin-json": "^1.2.0",
+    "eslint-plugin-mozilla": "^0.4.0",
+    "shield-study-schemas": "^0.8.3",
+    "webpack": "^2.6.1"
+  },
+  "bugs": {
+    "url": "https://github.com/mozilla/shield-studies-addon-utils/issues"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mozilla/shield-studies-addon-utils.git"
+  },
+  "keywords": [
+    "mozilla",
+    "addon",
+    "shield",
+    "shield-study",
+    "normandy",
+    "jsm"
+  ],
+  "homepage": "https://github.com/mozilla/shield-studies-addon-utils#readme"
+}

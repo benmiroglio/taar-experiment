@@ -1,0 +1,36 @@
+{
+  "name": "taarexp",
+  "version": "1.0.0",
+  "description": "TAAR experiment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuild": "cp node_modules/shield-studies-addon-utils/dist/StudyUtils.jsm addon/",
+    "build": "./bin/xpi.sh",
+    "eslint": "eslint addon --ext jsm --ext js --ext json --",
+    "watch": "onchange 'addon/**' 'package.json' 'template/**' -e addon/install.rdf -e addon/chrome.manifest -e addon/StudyUtils.jsm -- npm run build -- '{{event}} {{changed}} $(date)'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ajv": "^5.1.1",
+    "datauri": "^1.0.5",
+    "eslint": "^3.19.0",
+    "eslint-plugin-mozilla": "^0.3.2",
+    "moustache": "0.0.2",
+    "onchange": "^3.2.1"
+  },
+  "addon": {
+    "version": "1.0.0",
+    "id": "taarexp@mozilla.com",
+    "name": "TAARExperiment",
+    "minVersion": "53.0",
+    "maxVersion": "*",
+    "creator": "Ben Miroglio <bmiroglio@mozilla.com>",
+    "description": "Experiment that tests the Telemetry-Aware Add-on Recommonder (TAAR)",
+    "chrome": "taarexp",
+    "multiprocessCompatible": true,
+    "hasEmbeddedWebExtension": true
+  }
+}
