@@ -1,24 +1,5 @@
 "use strict";
 
-
-
-Set.prototype.difference = function(setB) {
-    var difference = new Set(this);
-    for (var elem of setB) {
-        difference.delete(elem);
-    }
-    return difference;
-}
-
-Set.prototype.union = function(setB) {
-    var union = new Set(this);
-    for (var elem of setB) {
-        union.add(elem);
-    }
-    return union;
-}
-
-
 const {utils: Cu} = Components;
 const CONFIGPATH = `${__SCRIPT_URI_SPEC__}/../Config.jsm`;
 const { config } = Cu.import(CONFIGPATH, {});
@@ -93,7 +74,6 @@ function addonChangeListener(change, client) {
     var uri = Services.wm.getMostRecentWindow('navigator:browser').gBrowser.currentURI.asciiSpec;
     if (client.lastInstalled) {
       //send telemetry
-
       var dataOut = {
            "clickedButton": String(client.clickedButton),
            "sawPopup": String(client.sawPopup),
@@ -102,7 +82,7 @@ function addonChangeListener(change, client) {
            "srcURI": String(uri),
            "pingType": "install"
         }
-      console.log(["Just installed", client.lastInstalled, "from", uri])
+      console.log("Just installed", client.lastInstalled, "from", uri)
       console.log(dataOut)
       studyUtils.telemetry(dataOut)
 
@@ -110,7 +90,7 @@ function addonChangeListener(change, client) {
       client.lastInstalled = null;
     }
     else if (client.lastDisabled) {
-      console.log(["Just disabled", client.lastDisabled, "from", uri])
+      console.log("Just disabled", client.lastDisabled, "from", uri)
       //send telemetry
       var dataOut = {
            "clickedButton": String(client.clickedButton),
@@ -342,6 +322,22 @@ function install(addonData, reason) {
 
 
 /** CONSTANTS and other bootstrap.js utilities */
+
+Set.prototype.difference = function(setB) {
+    var difference = new Set(this);
+    for (var elem of setB) {
+        difference.delete(elem);
+    }
+    return difference;
+}
+
+Set.prototype.union = function(setB) {
+    var union = new Set(this);
+    for (var elem of setB) {
+        union.add(elem);
+    }
+    return union;
+}
 
 // addon state change reasons
 const REASONS = {

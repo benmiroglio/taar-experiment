@@ -20,7 +20,7 @@ async function msgStudy(msg, data) {
     const ans = await browser.runtime.sendMessage({shield: true, msg, data});
     return ans;
   } catch (e) {
-    console.log('OHNO', e);
+    console.log('msgStudy failed:', e);
   }
 }
 
@@ -50,10 +50,7 @@ class TAARExperiment {
 
   async firstRun() {
     console.log('first run')
-    // await browser.storage.local.set({initialized: true})
-    // await browser.storage.local.set({startTime: Date.now()})
-    // await browser.storage.local.set({sawPopup: false})
-    // await browser.storage.local.set({clickedButton: false})
+    await browser.storage.local.set({sawPopup: false})
     browser.runtime.sendMessage({"init": true})
   }
 
@@ -98,15 +95,12 @@ class TAARExperiment {
               browser.runtime.sendMessage({"trigger-popup": true})
               browser.storage.local.set({sawPopup: true}) 
             } else { //client has seen popup, send data to bootstrap.js to union with popUp response
-              browser.storage.local.get().then(function(result) {
-                browser.runtime.sendMessage({"data":result})
-              })
-              
-            }
-          })
-
+                browser.storage.local.get().then(function(result) {
+                  browser.runtime.sendMessage({"data":result})
+                })
+              }
+          });
         }
-
         // Persist the updated stats.
         browser.storage.local.set(results);
       }, {
@@ -114,7 +108,6 @@ class TAARExperiment {
     });
   }
 }
-
 
 let experiment = new TAARExperiment();
 experiment.start();
