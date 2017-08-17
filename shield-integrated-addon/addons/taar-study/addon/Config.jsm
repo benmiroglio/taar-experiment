@@ -6,6 +6,9 @@
 - Cu.import will work for any 'general firefox things' (Services,etc)
   but NOT for addon-specific libs
 */
+const {utils: Cu} = Components;
+Cu.import("resource://gre/modules/TelemetryEnvironment.jsm");
+Cu.import("resource://gre/modules/Console.jsm")
 
 var EXPORTED_SYMBOLS = ["config"];
 
@@ -49,9 +52,28 @@ var config = {
     },
     "studyUtilsPath": `./StudyUtils.jsm`,
   },
-  "isEligible": async function() {
-    // get whatever prefs, addons, telemetry, anything!
-    return true;
+  "isEligible": async function() { 
+    /*
+    return true if profile is at most one week old
+    */
+
+    var proflileCreationDate = TelemetryEnvironment.currentEnvironment.profile.creationDate;
+    // MS -> Days
+    var currentDay = Math.round(Date.now() / 60 / 60 / 24 / 1000)
+    return (currentDay - proflileCreationDate) <= 7
+  },
+  "isEligible2": async function() { 
+    /*
+    return true if profile is at most one week old
+    */
+
+    var proflileCreationDate = TelemetryEnvironment.currentEnvironment.profile.creationDate;
+    var currentDay = Math.round(Date.now() / 60 / 60 / 24 / 1000)
+    return {"currentDay": currentDay, 
+            "PCD": proflileCreationDate,
+            "diff": currentDay - proflileCreationDate,
+            "E1ResultCHECK": (currentDay - proflileCreationDate) <= 7}
+
   },
   // addon-specific modules to load/unload during `startup`, `shutdown`
   "modules": [

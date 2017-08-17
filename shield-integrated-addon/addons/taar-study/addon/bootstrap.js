@@ -1,13 +1,6 @@
 "use strict";
 
-// logging
-function createLog(name, levelWord) {
-  Cu.import("resource://gre/modules/Log.jsm");
-  var L = Log.repository.getLogger(name);
-  L.addAppender(new Log.ConsoleAppender(new Log.BasicFormatter()));
-  L.level = Log.Level[levelWord] || Log.Level.Debug; // should be a config / pref
-  return L;
-}
+
 
 Set.prototype.difference = function(setB) {
     var difference = new Set(this);
@@ -40,14 +33,16 @@ Cu.import('resource://gre/modules/Services.jsm');
 const STUDYUTILSPATH = `${__SCRIPT_URI_SPEC__}/../${studyConfig.studyUtilsPath}`;
 const { studyUtils } = Cu.import(STUDYUTILSPATH, {});
 
+console.log({"CONFIG": config})
 class clientStatus {
   constructor() {
     this.clickedButton = false;
+    this.sawPop = false;
     this.activeAddons = new Set()
     this.addonHistory  = new Set()
-    this.installedAddons = new Set()
-    this.reEnabledAddons = new Set()
-    this.disabledAddons = new Set()
+    this.lastInstalled = null
+    this.lastDisabled = null
+    this.startTime = null
   }
 
   updateAddons() {
@@ -58,11 +53,12 @@ class clientStatus {
 
     let currDiff = curr.difference(prev)
     if (currDiff.size > 0) { // an add-on was installed or re-enabled
-      if (curr.difference(addonHistory).size > 0) { // new install, not a re-enable
-        this.installedAddons = this.installedAddons.union(currDiff)
+      var newInstalls = curr.difference(this.addonHistory)
+      if (newInstalls.size > 0) { // new install, not a re-enable
+        this.lastInstalled = newInstalls.values().next().value
       }
     } else { //an add-on was disabled or uninstalled
-      this.disabledAddons = this.disabledAddons.union(prev.difference(curr))
+      this.lastDisabled =  prev.difference(curr).values().next().value
     }
     this.activeAddons = curr
   }
@@ -92,17 +88,62 @@ function getNonSystemAddonData() {
 
 function addonChangeListener(change, client) {
   if (change == "addons-changed") {
+    console.log("\n\n SOMETHING CHANGED WITH ADDONS... \n\n\n -----------------")
     client.updateAddons()
+    var uri = Services.wm.getMostRecentWindow('navigator:browser').gBrowser.currentURI.asciiSpec;
+    if (client.lastInstalled) {
+      //send telemetry
+
+      var dataOut = {
+           "clickedButton": String(client.clickedButton),
+           "sawPopup": String(client.sawPopup),
+           "startTime": String(client.startTime),
+           "addon_id": String(client.lastInstalled),
+           "srcURI": String(uri),
+           "pingType": "install"
+        }
+      console.log(["Just installed", client.lastInstalled, "from", uri])
+      console.log(dataOut)
+      studyUtils.telemetry(dataOut)
+
+      /////
+      client.lastInstalled = null;
+    }
+    else if (client.lastDisabled) {
+      console.log(["Just disabled", client.lastDisabled, "from", uri])
+      //send telemetry
+      var dataOut = {
+           "clickedButton": String(client.clickedButton),
+           "sawPopup": String(client.sawPopup),
+           "startTime": String(client.startTime),
+           "addon_id": String(client.lastDisabled),
+           "srcURI": String(uri),
+           "pingType": "uninstall"
+        }
+      studyUtils.telemetry(dataOut)
+      console.log(dataOut)
+
+      //////
+      client.lastDisabled = null
+
+    }
+
+
   }
 }
 
-AddonManager.addAddonListener(this);
+
+/////////////////////////////////////////////////////////
+
+console.log({"eligible": config.isEligible()})
+console.log({"eligible2": config.isEligible2()})
 
 
 
 async function startup(addonData, reason) {
-  var client = new clientStatus();
+  const TESTING = true;
   const webExtension = addonData.webExtension;
+  var client = new clientStatus();
   var studySetup =
    {
       studyName: studyConfig.studyName,
@@ -116,6 +157,20 @@ async function startup(addonData, reason) {
   const variation = await chooseVariation();
   console.log({"variation":variation})
   studyUtils.setVariation(variation);
+
+  if ((REASONS[reason]) === "ADDON_INSTALL") {
+    studyUtils.firstSeen();  // sends telemetry "enter"
+    const eligible = await config.isEligible(); // addon-specific
+    if (!eligible & !TESTING) {
+      // uses config.endings.ineligible.url if any,
+      // sends UT for "ineligible"
+      // then uninstalls addon
+      console.log("ENDING STUDY DUE TO INELIGIBILITY")
+      await studyUtils.endStudy({reason: "ineligible"});
+      return;
+    }
+  }
+await studyUtils.startup({reason});
   
 
   var aboutAddonsDomain = "https://discovery.addons.mozilla.org/%LOCALE%/firefox/discovery/pane/%VERSION%/%OS%/%COMPATIBILITY_MODE%"
@@ -138,6 +193,20 @@ async function startup(addonData, reason) {
     const {browser} = api;
     browser.runtime.onMessage.addListener(studyUtils.respondToWebExtensionMessage);
     browser.runtime.onMessage.addListener((msg, sender, sendReply) => {
+      if (msg["init"]) {
+        console.log("init received")
+        client.startTime = Date.now();
+        var dataOut = {
+           "clickedButton": String(client.clickedButton),
+           "sawPopup": String(client.sawPopup),
+           "startTime": String(client.startTime),
+           "addon_id": String(client.lastInstalled),
+           "srcURI": "NA",
+           "pingType": "init"
+        }
+      studyUtils.telemetry(dataOut)
+      console.log(dataOut)
+      }
       if (msg['trigger-popup']) {
         ////////////////////// TESTING 
         // we can get these fields now if we want...
@@ -182,20 +251,21 @@ async function startup(addonData, reason) {
         
         // open popup, anchored by the panelUIMenuButton (hamburger)
         doorhangerPopup.openPopup(panelUIMenuButton, doorhangerPopup.getAttribute("position"), 0, 0, false, false);
+        client.sawPopup = true
       }
-      else if (msg["data"]) {
-        var dataToSend = msg['data']
-        dataToSend['clickedButton'] = client.clickedButton
-        dataToSend['hostNavigationStats'] = dataToSend['hostNavigationStats']['totalWebNav']
-        console.log("received data from WebExt")
-        console.log({'Results': dataToSend})
-        studyUtils.telemetry({
-           "clickedButton": String(dataToSend.clickedButton),
-           "sawPopup": String(dataToSend.sawPopup),
-           "webNav": String(dataToSend.hostNavigationStats),
-           "startTime": String(dataToSend.starttime)
-        })
-      }
+      // else if (msg["data"]) {
+      //   // var dataToSend = msg['data']
+      //   // dataToSend['clickedButton'] = client.clickedButton
+      //   // dataToSend['hostNavigationStats'] = dataToSend['hostNavigationStats']['totalWebNav']
+      //   // console.log("received data from WebExt")
+      //   // console.log({'Results': dataToSend})
+      //   // studyUtils.telemetry({
+      //   //    "clickedButton": String(dataToSend.clickedButton),
+      //   //    "sawPopup": String(dataToSend.sawPopup),
+      //   //    "webNav": String(dataToSend.hostNavigationStats),
+      //   //    "startTime": String(dataToSend.starttime)
+      //   // })
+      // }
     });
   });
 }

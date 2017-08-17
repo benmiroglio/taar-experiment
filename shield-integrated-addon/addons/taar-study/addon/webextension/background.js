@@ -39,9 +39,6 @@ class TAARExperiment {
     if (isFirstRun) await this.firstRun()
 
     this.branch = (await browser.storage.local.get('branch'))['branch']
-    this.startTime = (await browser.storage.local.get('starttime'))['starttime']
-
-    this.logStorage()
 
     // only montior navigation for branches qualified to 
     // receive the pop-up. 
@@ -53,9 +50,11 @@ class TAARExperiment {
 
   async firstRun() {
     console.log('first run')
-    await browser.storage.local.set({initialized: true})
-    await browser.storage.local.set({starttime: Date.now()})
-    await browser.storage.local.set({sawPopup: false})
+    // await browser.storage.local.set({initialized: true})
+    // await browser.storage.local.set({startTime: Date.now()})
+    // await browser.storage.local.set({sawPopup: false})
+    // await browser.storage.local.set({clickedButton: false})
+    browser.runtime.sendMessage({"init": true})
   }
 
   monitorNavigation() {

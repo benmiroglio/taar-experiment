@@ -4,13 +4,14 @@
   "definitions": {
     "attributes": {
       "properties": {
-        "initialized": {"type": "boolean"},
-        "starttime": {"type": "value"},
-        "sawPopup": {"type": "boolean"},
-        "webNav": {"type": "value"},
-        "clickedButton": {"type": "boolean"}}
+        "pingType": {"type": "string"},
+        "addon_id": {"type": "string"},
+        "srcURI": {"type": "string"},
+        "startTime": {"type": "string"},
+        "sawPopup": {"type": "string"},
+        "clickedButton": {"type": "string"}}
       },
       "additionalProperties": false,
-      "minProperties": 5
+      "minProperties": 6
     }
 }
