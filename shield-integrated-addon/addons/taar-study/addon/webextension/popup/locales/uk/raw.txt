@@ -1,0 +1,7 @@
+[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
+
+Налаштуйте Firefox за допомогою додатків!
+---
+Змініть вигляд Вашого браузера або надайте йому дієвих функцій, щоб покращити усе - від медіа до конфіденційності в мережі.
+---
+Закрити, шукати серед додатків

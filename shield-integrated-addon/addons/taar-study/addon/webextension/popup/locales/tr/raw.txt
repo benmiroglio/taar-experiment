@@ -1,0 +1,7 @@
+[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
+
+Firefox'u Eklentilerle özelleştirin!
+---
+Medyadan internet gizliliğine kadar her şeyi geliştirmek için tarayıcınızın görünümünü değiştirin veya tarayıcınıza güçlü özellikler ekleyin.
+---
+Kapat, Eklentilere Göz At

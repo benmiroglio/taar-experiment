@@ -1,0 +1,7 @@
+[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
+
+Pas Firefox aan met Add-ons!
+---
+Wijzig het uiterlijk van je browser of geef het krachtige functies om alles te verbeteren van media tot internet privacy.
+---
+Sluit, blader door Add-ons

@@ -1,4 +1,7 @@
 
+
+
+
 function telemetry (data) {
   function throwIfInvalid (obj) {
     // simple, check is all keys and values are strings
@@ -88,6 +91,10 @@ class TAARExperiment {
         }
         const testing=true;
 
+        let locale = browser.i18n.getUILanguage().replace("_", "-").toLowerCase()
+        let acceptedLangauges = browser.i18n.getAcceptLanguages()
+
+        console.log("locale", locale)
 
         hostNavigationStats["totalWebNav"] = hostNavigationStats["totalWebNav"] || 0
         hostNavigationStats['totalWebNav']++
@@ -104,7 +111,7 @@ class TAARExperiment {
                     browser.pageAction.show(tabId)
                     browser.pageAction.setPopup({
                       tabId,
-                      popup: "/popup/popup.html"
+                      popup: "/popup/locales/" + locale + "/popup.html"
                     });
                     // wait 500 ms to make sure pageAction exists in chrome
                     // so we can pageAction.show() from bootsrap.js

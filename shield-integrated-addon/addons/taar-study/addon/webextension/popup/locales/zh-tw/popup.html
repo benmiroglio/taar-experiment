@@ -1,13 +1,4 @@
-import glob
-import os
 
-for path in glob.glob("./shield-integrated-addon/addons/taar-study/addon/webextension/popup/locales/*"):
-  try:
-    with open(path+"/raw.txt") as f:
-      raw = f.read()
-    header, body, buttons = raw.split("]]]\n\n")[1].split("\n---\n")
-    close, browse = buttons.split(",")
-    html = """
     <!DOCTYPE HTML>
 
     <html>
@@ -23,29 +14,20 @@ for path in glob.glob("./shield-integrated-addon/addons/taar-study/addon/webexte
           </div>
           <div id="textsection">
             <div id="messagesection">
-              <h1 id="header">{}</h1>
-              <p>{}</p>
+              <h1 id="header">以附加元件自訂 Firefox！</h1>
+              <p>變更您的瀏覽器外觀，或給它強大的功能來提升從媒體到網路隱私的一切表現。 </p>
             </div>
           </div>
         </div>
         
         <div id="bottomsection">
           <div id="button-container">
-                  <button id="close-button" class="button-style">{}</button>
+                  <button id="close-button" class="button-style">關閉</button>
 
-            <button id="browse-addons-button" class="button-style">{}</button>
+            <button id="browse-addons-button" class="button-style"> 瀏覽附加元件</button>
           </div>
         </div>
        <script src="../../popup.js"></script> 
       </body>
     </html>
-    """.format(header, body, close, browse)
-
-    with open(path + "/popup.html", "w") as f:
-        f.write(html)
-
-  except:
-    print "error for ", path
-
-
-
+    

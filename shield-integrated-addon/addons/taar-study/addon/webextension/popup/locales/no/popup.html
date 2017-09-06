@@ -1,13 +1,4 @@
-import glob
-import os
 
-for path in glob.glob("./shield-integrated-addon/addons/taar-study/addon/webextension/popup/locales/*"):
-  try:
-    with open(path+"/raw.txt") as f:
-      raw = f.read()
-    header, body, buttons = raw.split("]]]\n\n")[1].split("\n---\n")
-    close, browse = buttons.split(",")
-    html = """
     <!DOCTYPE HTML>
 
     <html>
@@ -23,29 +14,20 @@ for path in glob.glob("./shield-integrated-addon/addons/taar-study/addon/webexte
           </div>
           <div id="textsection">
             <div id="messagesection">
-              <h1 id="header">{}</h1>
-              <p>{}</p>
+              <h1 id="header">Tilpass Firefox med programtillegg!</h1>
+              <p>Endre utseendet til nettleseren din, eller gi den kraftige funksjoner for å forbedre alt fra media til personvern på internett.</p>
             </div>
           </div>
         </div>
         
         <div id="bottomsection">
           <div id="button-container">
-                  <button id="close-button" class="button-style">{}</button>
+                  <button id="close-button" class="button-style">Lukk</button>
 
-            <button id="browse-addons-button" class="button-style">{}</button>
+            <button id="browse-addons-button" class="button-style"> bla gjennom programtillegg</button>
           </div>
         </div>
        <script src="../../popup.js"></script> 
       </body>
     </html>
-    """.format(header, body, close, browse)
-
-    with open(path + "/popup.html", "w") as f:
-        f.write(html)
-
-  except:
-    print "error for ", path
-
-
-
+    

@@ -3,7 +3,7 @@ from keys import *
 import os
 # keys contains API keys and ORDER_ID
 
-def write_translation(lang, content, path="./translations"):
+def write_translation(lang, content, path="./shield-integrated-addon/addons/taar-study/addon/webextension/popup/locales"):
 	os.system("mkdir {}/{}".format(path, lang))
 	with open(path + '/' + lang + "/raw.txt", "w") as f:
 		f.write(content.encode("utf-8"))
@@ -13,7 +13,9 @@ def fetch_job(job_id):
 	print resp
 	translation = resp['response']['job']['body_tgt']
 	lang = resp['response']['job']['lc_tgt']
-	write_translation(lang, translation)
+	# custom formatting already applied
+	if lang not in ("ar", "es", "ja", "ru", "zh-tw", "sk"):
+		write_translation(lang, translation)
 
 gengo = Gengo(
     public_key=PUBLIC_KEY,
@@ -35,6 +37,7 @@ for job_id in orders["jobs_reviewable"]:
 
 for job_id in orders["jobs_approved"]:
 	fetch_job(job_id)
+	
 
 
 
