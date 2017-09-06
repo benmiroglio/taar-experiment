@@ -4,4 +4,4 @@ Personalice Firefox con complementos.
 ---
 Cambie el aspecto de su navegador o añádale potentes características para mejorarlo todo, desde el contenido multimedia hasta la privacidad en Internet. 
 ---
-Cerrar y ver los complementos
+Cerrar, ver los complementos
