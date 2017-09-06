@@ -1,7 +1,0 @@
-[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
-
-Personalize o Firefox com Add-ons!
----
-Altere a aparência do seu navegador, ou dê-lhe poderosas funcionalidades para melhorar tudo, desde os meios de comunicação à privacidade digital. 
----
-Fechar, Navegar Add-ons

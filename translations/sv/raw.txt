@@ -1,7 +1,0 @@
-[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
-
-Anpassa Firefox med tillägg!
----
-Ändra hur din webbläsare ser ut eller ge den kraftfulla funktioner för att förbättra allt från media till internetintegritet.
----
-Stäng, Bläddra bland tillägg

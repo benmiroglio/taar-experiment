@@ -1,7 +1,0 @@
-[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
-
-Personalizați Firefox cu suplimente!
----
-Schimbați-vă aspectul browserului sau dați-i caracteristici puternice pentru a îmbunătăți totul, de la media la confidențialitatea pe internet.
----
-Închideți, Răsfoiți suplimentele

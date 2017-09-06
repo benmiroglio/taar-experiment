@@ -1,7 +1,0 @@
-[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
-
-Mukauta Firefoxia Lisäosilla!
----
-Muuta selaimesi ulkonäköä tai anna sille tehokkaita ominaisuuksia parantaaksesi kaikkea mediasta internetin yksityisyyteen.
----
-Sulje, Selaa Lisäosia

@@ -1,7 +1,0 @@
-[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
-
-Prilagodite Firefox uz pomoć dodataka!
----
-Promenite izgled svog pregledača, ili mu dajte moćne karakteristike da poboljšate sve od medija do privatnosti interneta.
----
-Zatvorite, Pretražite dodatke.

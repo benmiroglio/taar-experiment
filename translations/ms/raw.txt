@@ -1,7 +1,0 @@
-[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
-
-Sesuaikan Firefox dengan Tambahan!
----
-Tukar penampilan pelayar anda, atau lengkapkannya dengan ciri-ciri hebat untuk menambah baik segala aspek dari media hinggalah privasi internet.
----
-Tutup, Lihat Tambahan

@@ -1,7 +1,0 @@
-[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
-
-Tilpass Firefox med programtillegg!
----
-Endre utseendet til nettleseren din, eller gi den kraftige funksjoner for å forbedre alt fra media til personvern på internett.
----
-Lukk, bla gjennom programtillegg

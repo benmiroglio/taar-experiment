@@ -1,7 +1,0 @@
-[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
-
-Add-on 사용으로 Firefox를 최적화하세요.
----
-브라우저 화면을 바꾸거나 효과적인 기능을 사용해 미디어부터 인터넷 보안까지 업그레이드 해보세요.
----
-닫고 Add-on을 검색해보세요. (((*Translator's note; Please note that because it doesn't say "what" to close, just saying "close" alone sounds a bit strange.)))

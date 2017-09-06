@@ -1,7 +1,0 @@
-[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
-
-¡Personaliza Firefox con complementos!
----
-Cambia la apariencia de tu navegador, o dale características poderosas para mejorarlo todo, desde reproducción de medios hasta políticas de privacidad.
----
-Cierra, navega los complementos
