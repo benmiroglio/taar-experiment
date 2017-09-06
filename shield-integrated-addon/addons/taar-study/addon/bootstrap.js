@@ -17,7 +17,7 @@ const { studyUtils } = Cu.import(STUDYUTILSPATH, {});
 console.log({"CONFIG": config})
 class clientStatus {
   constructor() {
-    this.clickedButton = false;
+    this.clickedButton = null;
     this.sawPop = false;
     this.activeAddons = new Set()
     this.addonHistory  = new Set()
@@ -112,14 +112,14 @@ function addonChangeListener(change, client) {
   }
 }
 
+function closePageAction() {
+  var window = Services.wm.getMostRecentWindow('navigator:browser')
+  var pageAction = window.document.getElementById("taarexp_mozilla_com-page-action")
+  pageAction.parentNode.removeChild(pageAction);
+}
 
-/////////////////////////////////////////////////////////
 
-console.log({"eligible": config.isEligible()})
-console.log({"eligible2": config.isEligible2()})
-
-
-
+///////////////////////////////////////////////////////////////
 async function startup(addonData, reason) {
   const TESTING = true;
   const webExtension = addonData.webExtension;
@@ -173,6 +173,7 @@ await studyUtils.startup({reason});
     const {browser} = api;
     browser.runtime.onMessage.addListener(studyUtils.respondToWebExtensionMessage);
     browser.runtime.onMessage.addListener((msg, sender, sendReply) => {
+      // message handers //////////////////////////////////////////
       if (msg["init"]) {
         console.log("init received")
         client.startTime = Date.now();
@@ -181,71 +182,31 @@ await studyUtils.startup({reason});
            "sawPopup": String(client.sawPopup),
            "startTime": String(client.startTime),
            "addon_id": String(client.lastInstalled),
-           "srcURI": "NA",
+           "srcURI": "null",
            "pingType": "init"
         }
       studyUtils.telemetry(dataOut)
       console.log(dataOut)
       }
-      if (msg['trigger-popup']) {
-        ////////////////////// TESTING 
-        // we can get these fields now if we want...
-        var env = TelemetryEnvironment.currentEnvironment
-        var clientId =  ClientID.getClientID();
-        var profileCreationDate =env.profile.creationDate
-        var appName = env.build.applicationName
-        var version = env.build.platformVersion
-        ///////////////////////////////////////
+      else if (msg['trigger-popup']) {
         var window = Services.wm.getMostRecentWindow('navigator:browser')
-      
-        var panelUIMenu = window.document.getElementById("PanelUI-button");
-        var panelUIMenuButton = window.document.getElementById("PanelUI-menu-button");
-        var doorhangerPopup = window.document.getElementById("doorhanger-popup")
-        var foundDoorHanger = true
-        if (!doorhangerPopup) {
-            foundDoorHanger = false
-            doorhangerPopup = createMenuPanel(window)
-            panelUIMenu.appendChild(doorhangerPopup);
-         }
+        var pageAction = window.document.getElementById("taarexp_mozilla_com-page-action")
+        pageAction.click()
 
-        if(!foundDoorHanger) {
-          // add listener for button routing to about:addons
-          doorhangerPopup.getElementsByAttribute('type', 'button')[0].addEventListener("click", function() {
-              console.log('clicked button...')
-
-              console.log({'before': client.clickedButton})
-              client.clickedButton =  true;
-              console.log({'after': client.clickedButton})
-
-              window.gBrowser.selectedTab = window.gBrowser.addTab("about:addons", {relatedToCurrent:true});
-              doorhangerPopup.hidePopup();
-            })
-          // add listener for popup close (user dismissed)
-          doorhangerPopup.addEventListener("popuphidden", function() {
-            if (!client.clickedButton) {
-                console.log("hidden");
-            }
-            
-        })
-        }
         
-        // open popup, anchored by the panelUIMenuButton (hamburger)
-        doorhangerPopup.openPopup(panelUIMenuButton, doorhangerPopup.getAttribute("position"), 0, 0, false, false);
-        client.sawPopup = true
       }
-      // else if (msg["data"]) {
-      //   // var dataToSend = msg['data']
-      //   // dataToSend['clickedButton'] = client.clickedButton
-      //   // dataToSend['hostNavigationStats'] = dataToSend['hostNavigationStats']['totalWebNav']
-      //   // console.log("received data from WebExt")
-      //   // console.log({'Results': dataToSend})
-      //   // studyUtils.telemetry({
-      //   //    "clickedButton": String(dataToSend.clickedButton),
-      //   //    "sawPopup": String(dataToSend.sawPopup),
-      //   //    "webNav": String(dataToSend.hostNavigationStats),
-      //   //    "startTime": String(dataToSend.starttime)
-      //   // })
-      // }
+      else if (msg['clicked-disco-button']) {
+          var window = Services.wm.getMostRecentWindow('navigator:browser')
+          window.gBrowser.selectedTab = window.gBrowser.addTab("about:addons", {relatedToCurrent:true});
+          client.clickedButton = true;
+          closePageAction();
+      }
+      else if (msg['clicked-close-button']) {
+          client.clickedButton = false
+          closePageAction();
+      }
+
+
     });
   });
 }
@@ -270,44 +231,6 @@ function shutdown(addonData, reason) {
     Cu.unload("resource://gre/modules/Services.jsm");
     Cu.import("resource://gre/modules/Console.jsm");
   }
-}
-
-function createMenuPanel(window) {
-  var doc = window.document;
-  var panel = doc.createElement("panel");
-  var attributes = {
-                      "type": "arrow",
-                        "id": "doorhanger-popup",
-                      "flip": "slide",
-                  "position": "bottomcenter topright",
-               "noautofocus": "true",
-                      "side": "top",
-      "consumeoutsideclicks": "false",
-             "arrowposition": "after_end"
-  }
-
-  for (var att in attributes) {
-    panel.setAttribute(att, attributes[att])
-  }
-  var panelContent = doc.createElement("label");
-  // panelContent.innerHTML = "<h1>Hi</h1>"
-  panelContent.innerHTML = `
-  <html>
-    <head>
-      <meta charset="utf-8"></meta>
-  </head>
-    <body>
-      <div class="panel">
-        <div class="panel-section panel-section-header">
-          <div class="text-section-header">Customize Firefox with Add-ons!</div>
-          <button type="button" id="btn"> Try Add-ons </button>
-        </div>
-      </div>
-    </body>
-  </html>
-  `
-  panel.appendChild(panelContent);
-  return panel;
 }
 
 function uninstall(addonData, reason) {

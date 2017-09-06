@@ -6,10 +6,11 @@
   	"storage", 
   	"webNavigation", 
   	"tabs", 
-  	"webRequest",
-  	"<all_urls>",
     "management"
   ],
+  "page_action": {
+  "browser_style": true
+  },
   "background": {
   	"scripts": ["background.js"]
   	}

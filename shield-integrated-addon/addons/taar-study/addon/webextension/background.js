@@ -24,6 +24,11 @@ async function msgStudy(msg, data) {
   }
 }
 
+function triggerPopup() {
+  browser.runtime.sendMessage({"trigger-popup": true})
+  browser.storage.local.set({sawPopup: true})
+} 
+
 
 class TAARExperiment {
 
@@ -75,32 +80,38 @@ class TAARExperiment {
 
       // Monitor completed navigation events and update
       // stats accordingly. Keeps track of total completed web navigations
-      browser.webNavigation.onCompleted.addListener(evt => {
+
+      browser.webNavigation.onCompleted.addListener(info => {
         // Filter out any sub-frame related navigation event
-        if (evt.frameId !== 0) {
+        if (info.frameId !== 0) {
           return;
         }
+        const testing=true;
+
 
         hostNavigationStats["totalWebNav"] = hostNavigationStats["totalWebNav"] || 0
         hostNavigationStats['totalWebNav']++
 
         let totalCount = hostNavigationStats['totalWebNav'];
+        let tabId = info.tabId;
         console.log('TotalURI: ' + totalCount);
-
-        // arbitrary condition for now
-        if (totalCount > 2) {
-          var sawPopup = browser.storage.local.get("sawPopup")
-          sawPopup.then(function(result) {
-            if (!result.sawPopup) { // client hasn't seen popUp
-              browser.runtime.sendMessage({"trigger-popup": true})
-              browser.storage.local.set({sawPopup: true}) 
-            } else { //client has seen popup, send data to bootstrap.js to union with popUp response
-                browser.storage.local.get().then(function(result) {
-                  browser.runtime.sendMessage({"data":result})
-                })
-              }
-          });
-        }
+        var sawPopup = browser.storage.local.get("sawPopup")
+        sawPopup.then(function(result) {
+              if (!result.sawPopup || testing) { 
+                  // arbitrary condition for now
+                  if (totalCount > 0) {
+                    console.log("tabId", tabId)
+                    browser.pageAction.show(tabId)
+                    browser.pageAction.setPopup({
+                      tabId,
+                      popup: "/popup/popup.html"
+                    });
+                    // wait 500 ms to make sure pageAction exists in chrome
+                    // so we can pageAction.show() from bootsrap.js
+                    setTimeout(triggerPopup, 500);
+                  }
+                }
+              })
         // Persist the updated stats.
         browser.storage.local.set(results);
       }, {
