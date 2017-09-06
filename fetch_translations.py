@@ -1,5 +1,6 @@
 from gengo import Gengo
 from keys import *
+# keys contains API keys and ORDER_ID
 
 def write_translation(lang, content, path="./translations"):
 	with open(path + '/' + lang, "w") as f:
@@ -10,10 +11,6 @@ def fetch_job(job_id):
 	translation = resp['response']['job']['body_tgt']
 	lang = resp['response']['job']['lc_tgt']
 	write_translation(lang, translation)
-
-
-
-ORDER_ID = 3137679
 
 gengo = Gengo(
     public_key=PUBLIC_KEY,
