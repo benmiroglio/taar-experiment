@@ -158,8 +158,8 @@ await studyUtils.startup({reason});
   var aboutAddonsDomain = "https://discovery.addons.mozilla.org/%LOCALE%/firefox/discovery/pane/%VERSION%/%OS%/%COMPATIBILITY_MODE%"
   if (variation == "taar-disco-popup" || variation == "taar-disco") {
     aboutAddonsDomain += "?clientId=" + clientId
+    Preferences.set("extensions.webservice.discoverURL", aboutAddonsDomain)
   }
-  Preferences.set("extensions.webservice.discoverURL", aboutAddonsDomain)
 
   
 
