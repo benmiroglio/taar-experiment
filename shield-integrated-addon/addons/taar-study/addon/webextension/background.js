@@ -91,7 +91,7 @@ class TAARExperiment {
         }
         const testing=true;
 
-        let locale = browser.i18n.getUILanguage().replace("_", "-").toLowerCase()
+        var locale = browser.i18n.getUILanguage().replace("_", "-").toLowerCase()
         let acceptedLangauges = browser.i18n.getAcceptLanguages()
 
         console.log("locale", locale)

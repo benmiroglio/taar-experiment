@@ -151,12 +151,14 @@ async function startup(addonData, reason) {
     }
   }
 await studyUtils.startup({reason});
-  
 
+  const clientId = await ClientID.getClientID()
+
+  //default
   var aboutAddonsDomain = "https://discovery.addons.mozilla.org/%LOCALE%/firefox/discovery/pane/%VERSION%/%OS%/%COMPATIBILITY_MODE%"
-  // dummy google for now
-  // original url: https://discovery.addons.mozilla.org/%LOCALE%/firefox/discovery/pane/%VERSION%/%OS%/%COMPATIBILITY_MODE%
-  var aboutAddonsNewDomain = "https://addons.mozilla.org"
+  if (variation == "taar-disco-popup" || variation == "taar-dsico") {
+    aboutAddonsDomain += "?clientId=" + clientId
+  }
   Preferences.set("extensions.webservice.discoverURL", aboutAddonsDomain)
 
   

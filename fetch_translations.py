@@ -34,6 +34,7 @@ print "Jobs approved", len(orders["jobs_approved"])
 # approve all reviewable jobs and grab text
 for job_id in orders["jobs_reviewable"]:
 	gengo.updateTranslationJob(id=job_id, action={"action": "approve"})
+	fetch_job(job_id)
 
 for job_id in orders["jobs_approved"]:
 	fetch_job(job_id)

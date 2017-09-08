@@ -1,0 +1,7 @@
+[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
+
+Personnaliser Firefox avec des extensions!
+---
+Changer l'apparence de votre navigateur ou lui ajouter des fonctionnalités puissantes pour tout améliorer, des médias à la protection de votre vie privée sur internet. 
+---
+Fermer, parcourir les extensions
