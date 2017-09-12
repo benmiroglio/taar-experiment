@@ -14,7 +14,8 @@ Cu.import('resource://gre/modules/Services.jsm');
 const STUDYUTILSPATH = `${__SCRIPT_URI_SPEC__}/../${studyConfig.studyUtilsPath}`;
 const { studyUtils } = Cu.import(STUDYUTILSPATH, {});
 
-console.log({"CONFIG": config})
+console.log({"CONFIG": config, "isEligible": config.isEligible()})
+
 class clientStatus {
   constructor() {
     this.clickedButton = null;
@@ -67,11 +68,23 @@ function getNonSystemAddonData() {
   }
 }
 
+function bucketURI(uri) {
+  if (uri != "about:addons") {
+        if (uri.indexOf("addons.mozilla.org") > 0) {
+        uri = "AMO"
+      } else {
+        uri = "other"
+      }
+    }
+  return uri
+}
+
 function addonChangeListener(change, client) {
   if (change == "addons-changed") {
     console.log("\n\n SOMETHING CHANGED WITH ADDONS... \n\n\n -----------------")
     client.updateAddons()
-    var uri = Services.wm.getMostRecentWindow('navigator:browser').gBrowser.currentURI.asciiSpec;
+    var uri = bucketURI(Services.wm.getMostRecentWindow('navigator:browser').gBrowser.currentURI.asciiSpec);
+
     if (client.lastInstalled) {
       //send telemetry
       var dataOut = {
@@ -91,6 +104,7 @@ function addonChangeListener(change, client) {
     }
     else if (client.lastDisabled) {
       console.log("Just disabled", client.lastDisabled, "from", uri)
+
       //send telemetry
       var dataOut = {
            "clickedButton": String(client.clickedButton),

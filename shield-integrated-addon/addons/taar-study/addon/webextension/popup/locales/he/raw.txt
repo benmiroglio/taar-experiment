@@ -1,0 +1,10 @@
+[[[this is for a popup within a web browser, please separate each section with a triple dash (---) for easier parsing ]]]
+
+עצב/י את Firefox לפי טעמך האישי באמצעות הרחבות!
+---
+שנה/שני את מראה הדפדפן, או הוסף/י לו תכונות חזקות לשיפור כל דבר, ממדיה ועד פרטיות באינטרנט.
+---
+סגור, חפש/י הרחבות
+
+
+

@@ -9,11 +9,12 @@
 const {utils: Cu} = Components;
 Cu.import("resource://gre/modules/TelemetryEnvironment.jsm");
 Cu.import("resource://gre/modules/Console.jsm")
-
-var EXPORTED_SYMBOLS = ["config"];
-
-var slug = "taarexp"; // matches chrome.manifest;
-
+const EXPORTED_SYMBOLS = ["config"];
+const slug = "taarexp"; // matches chrome.manifest;
+const locales = new Set(['ar','bg','cs','da','de','el','en-us','en-gb',
+               'es-es','es-la','fi','fr','hu','id','it','ja',
+               'ko','ms','nl','no','pl','pt','pt-br','ro','ru',
+               'sk','sr','sv','tl','tr','uk','vi', 'zh-tw'])
 var config = {
   // Equal weighting for each  of the 4 variations
   "study": {
@@ -57,23 +58,12 @@ var config = {
     return true if profile is at most one week old
     */
 
-    var proflileCreationDate = TelemetryEnvironment.currentEnvironment.profile.creationDate;
+    // const locale = TelemetryEnvironment.currentEnvironment.settings.locale;
+    const locale = "notelig"
+    const proflileCreationDate = TelemetryEnvironment.currentEnvironment.profile.creationDate;
     // MS -> Days
-    var currentDay = Math.round(Date.now() / 60 / 60 / 24 / 1000)
-    return (currentDay - proflileCreationDate) <= 7
-  },
-  "isEligible2": async function() { 
-    /*
-    return true if profile is at most one week old
-    */
-
-    var proflileCreationDate = TelemetryEnvironment.currentEnvironment.profile.creationDate;
-    var currentDay = Math.round(Date.now() / 60 / 60 / 24 / 1000)
-    return {"currentDay": currentDay, 
-            "PCD": proflileCreationDate,
-            "diff": currentDay - proflileCreationDate,
-            "E1ResultCHECK": (currentDay - proflileCreationDate) <= 7}
-
+    const currentDay = Math.round(Date.now() / 60 / 60 / 24 / 1000)
+    return (currentDay - proflileCreationDate) <= 7 && locales.has(locale)
   },
   // addon-specific modules to load/unload during `startup`, `shutdown`
   "modules": [
