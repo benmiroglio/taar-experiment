@@ -135,7 +135,7 @@ function closePageAction() {
 
 ///////////////////////////////////////////////////////////////
 async function startup(addonData, reason) {
-  const TESTING = true;
+  const TESTING = false;
   const webExtension = addonData.webExtension;
   var client = new clientStatus();
   var studySetup =

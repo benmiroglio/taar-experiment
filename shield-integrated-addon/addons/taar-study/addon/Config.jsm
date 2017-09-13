@@ -11,10 +11,47 @@ Cu.import("resource://gre/modules/TelemetryEnvironment.jsm");
 Cu.import("resource://gre/modules/Console.jsm")
 const EXPORTED_SYMBOLS = ["config"];
 const slug = "taarexp"; // matches chrome.manifest;
-const locales = new Set(['ar','bg','cs','da','de','el','en-us','en-gb',
-               'es-es','es-la','fi','fr','hu','id','it','ja',
-               'ko','ms','nl','no','pl','pt','pt-br','ro','ru',
-               'sk','sr','sv','tl','tr','uk','vi', 'zh-tw'])
+const locales = new Set(
+  [
+    "ar",
+    "bg",
+    "cs",
+    "da",
+    "de",
+    "el",
+    "en-gb",
+    "en-us",
+    "es-ar",
+    "es-es",
+    "es-la",
+    "fi",
+    "fr",
+    "fr-ca",
+    "he",
+    "hu",
+    "id",
+    "it",
+    "ja",
+    "ko",
+    "ms",
+    "nl",
+    "no",
+    "pl",
+    "pt",
+    "pt-br",
+    "ro",
+    "ru",
+    "sk",
+    "sr",
+    "sv",
+    "th",
+    "tl",
+    "tr",
+    "uk",
+    "vi",
+    "zh-tw"
+    ])
+
 var config = {
   // Equal weighting for each  of the 4 variations
   "study": {
