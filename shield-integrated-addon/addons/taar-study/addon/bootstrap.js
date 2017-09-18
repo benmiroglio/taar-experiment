@@ -138,7 +138,7 @@ async function startup(addonData, reason) {
   const variation = await chooseVariation();
 
   //force test branch
-  variation.name = 'taar-disco-popup';
+  variation.name = 'taar-disco';
   studyUtils.setVariation(variation);
 
   if ((REASONS[reason]) === "ADDON_INSTALL") {
