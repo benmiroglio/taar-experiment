@@ -88,7 +88,7 @@ function webNavListener(info) {
 class TAARExperiment {
 
   constructor() {
-    this.popUpVariations = new Set(["vanilla-disco-popup", ,"taar-diso-popup"])
+    this.popUpVariations = new Set(["vanilla-disco-popup", ,"taar-disco-popup"])
   }
   logStorage() {
     browser.storage.local.get().then(console.log)

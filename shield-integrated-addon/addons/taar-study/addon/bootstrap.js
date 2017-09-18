@@ -149,7 +149,6 @@ async function startup(addonData, reason) {
   studyUtils.setup(studySetup);
   studyUtils.setLoggingLevel(config.log.studyUtils.level);
   const variation = await chooseVariation();
-  console.log({"variation":variation})
   studyUtils.setVariation(variation);
 
   if ((REASONS[reason]) === "ADDON_INSTALL") {
@@ -170,7 +169,7 @@ await studyUtils.startup({reason});
 
   //default
   var aboutAddonsDomain = "https://discovery.addons.mozilla.org/%LOCALE%/firefox/discovery/pane/%VERSION%/%OS%/%COMPATIBILITY_MODE%"
-  if (variation == "taar-disco-popup" || variation == "taar-disco") {
+  if (variation.name == "taar-disco-popup" || variation.name == "taar-disco") {
     aboutAddonsDomain += "?clientId=" + clientId
     Preferences.set("extensions.webservice.discoverURL", aboutAddonsDomain)
   }
