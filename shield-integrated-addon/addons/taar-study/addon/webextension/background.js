@@ -56,7 +56,7 @@ function webNavListener(info) {
     sawPopup.then(function(result) {
           if (!result.sawPopup || testing) { // client has not seen popup
               // arbitrary condition for now
-              if (totalCount > 0) {
+              if (totalCount > 2) {
                 browser.storage.local.set({"PA-tabId": tabId})
                 browser.pageAction.show(tabId)
                 browser.pageAction.setPopup({
