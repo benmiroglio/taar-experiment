@@ -76,12 +76,9 @@ var config = {
       */
     "endings": {
       /** standard endings */
-      "ineligible": {
-        "url": "http://www.example.com/?reason=ineligible",
+      "no-endings": {
+        "url": "null",
       },
-      "expired": {
-        "url": "http://www.example.com/?reason=expired",
-      }
     },
     "telemetry": {
       "send": true, // assumed false. Actually send pings?
@@ -96,9 +93,7 @@ var config = {
     */
 
     // const locale = TelemetryEnvironment.currentEnvironment.settings.locale;
-    const locale = "notelig"
     const proflileCreationDate = TelemetryEnvironment.currentEnvironment.profile.creationDate;
-    // MS -> Days
     const currentDay = Math.round(Date.now() / 60 / 60 / 24 / 1000)
     return (currentDay - proflileCreationDate) <= 7 && locales.has(locale)
   },
