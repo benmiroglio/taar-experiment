@@ -11,7 +11,6 @@ function telemetry (data) {
   msgStudy('telemetry', data);
 }
 
-// template code for talking to `studyUtils` using `browser.runtime`
 async function msgStudy(msg, data) {
   const allowed = ['endStudy', 'telemetry', 'info'];
   if (!allowed.includes(msg)) throw new Error(`shieldUtils doesn't know ${msg}, only knows ${allowed}`);
@@ -55,8 +54,7 @@ function webNavListener(info) {
 
     sawPopup.then(function(result) {
           if (!result.sawPopup || testing) { // client has not seen popup
-              // arbitrary condition for now
-              if (totalCount > 0) {
+              if (totalCount > 2) {
                 browser.storage.local.set({"PA-tabId": tabId})
                 browser.pageAction.show(tabId)
                 browser.pageAction.setPopup({
@@ -74,8 +72,9 @@ function webNavListener(info) {
                       browser.pageAction.hide(result2["PA-tabId"])
                       browser.storage.local.set({"PA-hidden": true})
                     })
-                   browser.webNavigation.onCompleted.removeListener(webNavListener)
                 }
+                browser.webNavigation.onCompleted.removeListener(webNavListener)
+
               })
             }
           })

@@ -5,16 +5,16 @@ const CONFIGPATH = `${__SCRIPT_URI_SPEC__}/../Config.jsm`;
 const { config } = Cu.import(CONFIGPATH, {});
 const studyConfig = config.study;
 const log = createLog(studyConfig.studyName, config.log.bootstrap.level);
+
 Cu.import("resource://gre/modules/Preferences.jsm");
 Cu.import("resource://gre/modules/ClientID.jsm");
 Cu.import("resource://gre/modules/TelemetryEnvironment.jsm");
 Cu.import("resource://gre/modules/TelemetryController.jsm");
 Cu.import("resource://gre/modules/AddonManager.jsm");
 Cu.import('resource://gre/modules/Services.jsm');
+
 const STUDYUTILSPATH = `${__SCRIPT_URI_SPEC__}/../${studyConfig.studyUtilsPath}`;
 const { studyUtils } = Cu.import(STUDYUTILSPATH, {});
-
-console.log({"CONFIG": config, "isEligible": config.isEligible()})
 
 class clientStatus {
   constructor() {
@@ -81,7 +81,6 @@ function bucketURI(uri) {
 
 function addonChangeListener(change, client) {
   if (change == "addons-changed") {
-    console.log("\n\n SOMETHING CHANGED WITH ADDONS... \n\n\n -----------------")
     client.updateAddons()
     var uri = bucketURI(Services.wm.getMostRecentWindow('navigator:browser').gBrowser.currentURI.asciiSpec);
 
@@ -95,34 +94,21 @@ function addonChangeListener(change, client) {
            "srcURI": String(uri),
            "pingType": "install"
         }
-      console.log("Just installed", client.lastInstalled, "from", uri)
-      console.log(dataOut)
       studyUtils.telemetry(dataOut)
-
-      /////
       client.lastInstalled = null;
+    } else if (client.lastDisabled) {
+        //send telemetry
+        var dataOut = {
+             "clickedButton": String(client.clickedButton),
+             "sawPopup": String(client.sawPopup),
+             "startTime": String(client.startTime),
+             "addon_id": String(client.lastDisabled),
+             "srcURI": String(uri),
+             "pingType": "uninstall"
+          }
+        studyUtils.telemetry(dataOut)
+        client.lastDisabled = null
     }
-    else if (client.lastDisabled) {
-      console.log("Just disabled", client.lastDisabled, "from", uri)
-
-      //send telemetry
-      var dataOut = {
-           "clickedButton": String(client.clickedButton),
-           "sawPopup": String(client.sawPopup),
-           "startTime": String(client.startTime),
-           "addon_id": String(client.lastDisabled),
-           "srcURI": String(uri),
-           "pingType": "uninstall"
-        }
-      studyUtils.telemetry(dataOut)
-      console.log(dataOut)
-
-      //////
-      client.lastDisabled = null
-
-    }
-
-
   }
 }
 
@@ -135,7 +121,7 @@ function closePageAction() {
 
 ///////////////////////////////////////////////////////////////
 async function startup(addonData, reason) {
-  const TESTING = false;
+  const TESTING = true;
   const webExtension = addonData.webExtension;
   var client = new clientStatus();
   var studySetup =
@@ -148,29 +134,25 @@ async function startup(addonData, reason) {
 
   studyUtils.setup(studySetup);
   studyUtils.setLoggingLevel(config.log.studyUtils.level);
+
   const variation = await chooseVariation();
-  console.log({"variation":variation})
   studyUtils.setVariation(variation);
 
   if ((REASONS[reason]) === "ADDON_INSTALL") {
     studyUtils.firstSeen();  // sends telemetry "enter"
     const eligible = await config.isEligible(); // addon-specific
     if (!eligible & !TESTING) {
-      // uses config.endings.ineligible.url if any,
-      // sends UT for "ineligible"
-      // then uninstalls addon
-      console.log("ENDING STUDY DUE TO INELIGIBILITY")
       await studyUtils.endStudy({reason: "ineligible"});
       return;
     }
   }
 await studyUtils.startup({reason});
-
+  console.log({"Branch": variation.name});
   const clientId = await ClientID.getClientID()
 
   //default
   var aboutAddonsDomain = "https://discovery.addons.mozilla.org/%LOCALE%/firefox/discovery/pane/%VERSION%/%OS%/%COMPATIBILITY_MODE%"
-  if (variation == "taar-disco-popup" || variation == "taar-disco") {
+  if (variation.name == "taar-disco-popup" || variation.name == "taar-disco") {
     aboutAddonsDomain += "?clientId=" + clientId
     Preferences.set("extensions.webservice.discoverURL", aboutAddonsDomain)
   }
@@ -183,7 +165,6 @@ await studyUtils.startup({reason});
     client.addonHistory = getNonSystemAddons()
     TelemetryEnvironment.registerChangeListener("addonListener", function(x) {
       addonChangeListener(x, client)
-      console.log(client)
     });
 
     const {browser} = api;
@@ -191,7 +172,6 @@ await studyUtils.startup({reason});
     browser.runtime.onMessage.addListener((msg, sender, sendReply) => {
       // message handers //////////////////////////////////////////
       if (msg["init"]) {
-        console.log("init received")
         client.startTime = Date.now();
         var dataOut = {
            "clickedButton": String(client.clickedButton),
@@ -202,9 +182,9 @@ await studyUtils.startup({reason});
            "pingType": "init"
         }
       studyUtils.telemetry(dataOut)
-      console.log(dataOut)
       }
       else if (msg['trigger-popup']) {
+        client.sawPopup = true;
         var window = Services.wm.getMostRecentWindow('navigator:browser')
         var pageAction = window.document.getElementById("taarexp_mozilla_com-page-action")
         pageAction.click()

@@ -67,22 +67,7 @@ var config = {
         "weight": 1}
 
     ],
-    /** **endings**
-      * - keys indicate the 'endStudy' even that opens these.
-      * - urls should be static (data) or external, because they have to
-      *   survive uninstall
-      * - If there is no key for an endStudy reason, no url will open.
-      * - usually surveys, orientations, explanations
-      */
-    "endings": {
-      /** standard endings */
-      "ineligible": {
-        "url": "http://www.example.com/?reason=ineligible",
-      },
-      "expired": {
-        "url": "http://www.example.com/?reason=expired",
-      }
-    },
+    "endings": {},
     "telemetry": {
       "send": true, // assumed false. Actually send pings?
       "removeTestingFlag": false,  // Marks pings as testing, set true for actual release
@@ -92,11 +77,11 @@ var config = {
   },
   "isEligible": async function() { 
     /*
-    return true if profile is at most one week old
+    Return true if profile is at most one week old
+    or has a qualifying locale
     */
 
-    // const locale = TelemetryEnvironment.currentEnvironment.settings.locale;
-    const locale = "notelig"
+    const locale = TelemetryEnvironment.currentEnvironment.settings.locale;
     const proflileCreationDate = TelemetryEnvironment.currentEnvironment.profile.creationDate;
     // MS -> Days
     const currentDay = Math.round(Date.now() / 60 / 60 / 24 / 1000)
