@@ -14,7 +14,6 @@ Cu.import('resource://gre/modules/Services.jsm');
 const STUDYUTILSPATH = `${__SCRIPT_URI_SPEC__}/../${studyConfig.studyUtilsPath}`;
 const { studyUtils } = Cu.import(STUDYUTILSPATH, {});
 
-console.log({"CONFIG": config, "isEligible": config.isEligible()})
 
 class clientStatus {
   constructor() {
@@ -31,7 +30,6 @@ class clientStatus {
     let prev = this.activeAddons
     let curr = getNonSystemAddons()
 
-    console.log({'prev':prev, 'curr':curr})
 
     let currDiff = curr.difference(prev)
     if (currDiff.size > 0) { // an add-on was installed or re-enabled
@@ -63,7 +61,6 @@ function getNonSystemAddonData() {
   for (var addon in activeAddons) {
     let data = activeAddons[addon]
     if (!data.isSystem && !data.foreignInstall) {
-      console.log(data)
     }
   }
 }
@@ -95,7 +92,6 @@ function addonChangeListener(change, client) {
            "pingType": "install"
         }
       console.log("Just installed", client.lastInstalled, "from", uri)
-      console.log(dataOut)
       studyUtils.telemetry(dataOut)
 
       /////
@@ -114,7 +110,6 @@ function addonChangeListener(change, client) {
            "pingType": "uninstall"
         }
       studyUtils.telemetry(dataOut)
-      console.log(dataOut)
 
       //////
       client.lastDisabled = null
@@ -181,7 +176,6 @@ await studyUtils.startup({reason});
     client.addonHistory = getNonSystemAddons()
     TelemetryEnvironment.registerChangeListener("addonListener", function(x) {
       addonChangeListener(x, client)
-      console.log(client)
     });
 
     const {browser} = api;
@@ -200,7 +194,6 @@ await studyUtils.startup({reason});
            "pingType": "init"
         }
       studyUtils.telemetry(dataOut)
-      console.log(dataOut)
       }
       else if (msg['trigger-popup']) {
         var window = Services.wm.getMostRecentWindow('navigator:browser')
