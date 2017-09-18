@@ -87,7 +87,7 @@ function webNavListener(info) {
 class TAARExperiment {
 
   constructor() {
-    this.popUpVariations = new Set(["vanilla-disco-popup", ,"taar-diso-popup"])
+    this.popUpVariations = new Set(["vanilla-disco-popup", ,"taar-disco-popup"])
   }
   logStorage() {
     browser.storage.local.get().then(console.log)
@@ -101,8 +101,11 @@ class TAARExperiment {
 
     // only montior navigation for branches qualified to 
     // receive the pop-up. 
+    console.log(this.info.variation.name);
     if (this.popUpVariations.has(this.info.variation.name)) {
         this.monitorNavigation()
+    } else {
+      console.log("not montoring")
     }
   }
 

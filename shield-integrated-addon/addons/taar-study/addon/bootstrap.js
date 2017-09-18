@@ -136,6 +136,9 @@ async function startup(addonData, reason) {
   studyUtils.setLoggingLevel(config.log.studyUtils.level);
 
   const variation = await chooseVariation();
+
+  //force test branch
+  variation.name = 'taar-disco-popup';
   studyUtils.setVariation(variation);
 
   if ((REASONS[reason]) === "ADDON_INSTALL") {
