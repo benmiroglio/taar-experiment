@@ -81,7 +81,6 @@ function bucketURI(uri) {
 
 function addonChangeListener(change, client) {
   if (change == "addons-changed") {
-    console.log("\n\n SOMETHING CHANGED WITH ADDONS... \n\n\n -----------------")
     client.updateAddons()
     var uri = bucketURI(Services.wm.getMostRecentWindow('navigator:browser').gBrowser.currentURI.asciiSpec);
 
