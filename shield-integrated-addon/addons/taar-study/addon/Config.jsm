@@ -92,7 +92,7 @@ var config = {
     return true if profile is at most one week old
     */
 
-    // const locale = TelemetryEnvironment.currentEnvironment.settings.locale;
+    const locale = TelemetryEnvironment.currentEnvironment.settings.locale;
     const proflileCreationDate = TelemetryEnvironment.currentEnvironment.profile.creationDate;
     const currentDay = Math.round(Date.now() / 60 / 60 / 24 / 1000)
     return (currentDay - proflileCreationDate) <= 7 && locales.has(locale)
