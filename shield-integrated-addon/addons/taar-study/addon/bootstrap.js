@@ -196,6 +196,8 @@ await studyUtils.startup({reason});
       studyUtils.telemetry(dataOut)
       }
       else if (msg['trigger-popup']) {
+        // set pref to force discovery page
+        Preferences.set("extensions.ui.LastCategory", "addons://discover/")
         var window = Services.wm.getMostRecentWindow('navigator:browser')
         var pageAction = window.document.getElementById("taarexp_mozilla_com-page-action")
         pageAction.click()
