@@ -188,6 +188,7 @@ await studyUtils.startup({reason});
       }
       else if (msg['trigger-popup']) {
         client.sawPopup = true;
+        Preferences.set("extensions.ui.lastCategory", "addons://discover/")
         var window = Services.wm.getMostRecentWindow('navigator:browser')
         var pageAction = window.document.getElementById("taarexp_mozilla_com-page-action")
         pageAction.click()
