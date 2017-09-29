@@ -89,13 +89,17 @@ var config = {
   },
   "isEligible": async function() { 
     /*
-    return true if profile is at most one week old
+    return true if 3 <= profile_age <= 12
+    and locale is among those localized
     */
-
-    const locale = TelemetryEnvironment.currentEnvironment.settings.locale;
+    const locale = TelemetryEnvironment.currentEnvironment.settings.locale.toLowerCase();
     const proflileCreationDate = TelemetryEnvironment.currentEnvironment.profile.creationDate;
     const currentDay = Math.round(Date.now() / 60 / 60 / 24 / 1000)
-    return (currentDay - proflileCreationDate) <= 7 && locales.has(locale)
+    const profileAgeInDays = currentDay - proflileCreationDate
+
+    const validProfileAge = profileAgeInDays >= 3 && profileAgeInDays <= 12
+    const validLocale = locales.has(locale)
+    return validProfileAge && validLocale
   },
   // addon-specific modules to load/unload during `startup`, `shutdown`
   "modules": [
