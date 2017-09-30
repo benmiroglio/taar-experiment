@@ -17,8 +17,8 @@ const { studyUtils } = Cu.import(STUDYUTILSPATH, {});
 
 class clientStatus {
   constructor() {
-    this.clickedButton = null;
-    this.sawPop = false;
+    this.clickedButton = false;
+    this.sawPopup = false;
     this.activeAddons = new Set()
     this.addonHistory  = new Set()
     this.lastInstalled = null
