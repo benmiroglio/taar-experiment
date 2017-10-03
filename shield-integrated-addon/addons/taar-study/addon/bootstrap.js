@@ -192,6 +192,16 @@ await studyUtils.startup({reason});
         var window = Services.wm.getMostRecentWindow('navigator:browser')
         var pageAction = window.document.getElementById("taarexp_mozilla_com-page-action")
         pageAction.click()
+        // send telemetry
+        var dataOut = {
+           "clickedButton": "false",
+           "sawPopup": "true",
+           "startTime": String(client.startTime),
+           "addon_id": "null",
+           "srcURI": "null",
+           "pingType": "popup-trigger"
+          }
+          studyUtils.telemetry(dataOut)
 
         
       }
@@ -200,6 +210,17 @@ await studyUtils.startup({reason});
           window.gBrowser.selectedTab = window.gBrowser.addTab("about:addons", {relatedToCurrent:true});
           client.clickedButton = true;
           closePageAction();
+
+          // send telemetry
+          var dataOut = {
+           "clickedButton": "true",
+           "sawPopup": "true",
+           "startTime": String(client.startTime),
+           "addon_id": "null",
+           "srcURI": "null",
+           "pingType": "button-click"
+          }
+          studyUtils.telemetry(dataOut)
       }
       else if (msg['clicked-close-button']) {
           client.clickedButton = false
