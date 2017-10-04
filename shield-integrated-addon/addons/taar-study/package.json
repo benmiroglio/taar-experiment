@@ -1,6 +1,6 @@
 {
   "name": "taarexp",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "TAAR experiment",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "onchange": "^3.2.1"
   },
   "addon": {
-    "version": "2.1.0",
+    "version": "2.2.0",
     "id": "taarexp@mozilla.com",
     "name": "TAARExperiment",
     "minVersion": "53.0",

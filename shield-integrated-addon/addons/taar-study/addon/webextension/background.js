@@ -54,7 +54,7 @@ function webNavListener(info) {
     console.log('TotalURI: ' + totalCount);
 
     sawPopup.then(function(result) {
-          if (!result.sawPopup || testing) { // client has not seen popup
+          if (!result.sawPopup && totalCount <= 3) { // client has not seen popup
               // arbitrary condition for now
               if (totalCount > 2) {
                 browser.storage.local.set({"PA-tabId": tabId})
@@ -68,17 +68,13 @@ function webNavListener(info) {
                 setTimeout(triggerPopup, 500);
               }
           } else { //client has seen the popup
-              browser.storage.local.get("PA-hidden").then(function(result) {
-                if (!result["PA-hidden"]) { // page action is still visible
-                   browser.storage.local.get("PA-tabId").then(function(result2) { 
-                      browser.pageAction.hide(result2["PA-tabId"])
-                      browser.storage.local.set({"PA-hidden": true})
-                    })
-                   browser.webNavigation.onCompleted.removeListener(webNavListener)
-                }
+              browser.storage.local.get("PA-tabId").then(function(result2) { 
+                  browser.pageAction.hide(result2["PA-tabId"])
               })
-            }
-          })
+              browser.webNavigation.onCompleted.removeListener(webNavListener)
+
+              }
+            });
       // Persist the updated webNav stats.
       browser.storage.local.set(results);
   })
