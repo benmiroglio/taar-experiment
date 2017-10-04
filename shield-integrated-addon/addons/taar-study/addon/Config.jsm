@@ -99,6 +99,7 @@ var config = {
 
     const validProfileAge = profileAgeInDays >= 3 && profileAgeInDays <= 12
     const validLocale = locales.has(locale)
+    return true
     return validProfileAge && validLocale
   },
   // addon-specific modules to load/unload during `startup`, `shutdown`

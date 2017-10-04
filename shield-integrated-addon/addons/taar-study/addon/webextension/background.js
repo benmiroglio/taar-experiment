@@ -54,6 +54,7 @@ function webNavListener(info) {
     console.log('TotalURI: ' + totalCount);
 
     sawPopup.then(function(result) {
+        console.log("sawPopup!!! ->>", result.sawPopup)
           if (!result.sawPopup || testing) { // client has not seen popup
               // arbitrary condition for now
               if (totalCount > 2) {
